@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { MdFileDownload } from "react-icons/md";
+import { MdFileDownload, MdFilePresent } from "react-icons/md";
 import { useParams } from "react-router-dom";
 
 import { useTodoState } from "../TodoContext";
 
 const Download = styled.a`
   display: inline-block;
-  color: #dee2e6;
-  font-size: 18px;
+  color: gray;
+  font-size: 16px;
   cursor: pointer;
   &:hover {
     color: green;
@@ -40,27 +40,53 @@ const TodoDetailTitle = styled.div`
 `;
 
 const TodoDetailContent = styled.div`
-  padding-top: 28px;
+  padding-top: 20px;
   padding-left: 32px;
   padding-right: 32px;
   padding-bottom: 24px;
-  border-bottom: 1px solid #e9ecef;
+  /*border-bottom: 1px solid #e9ecef;*/
   color: #343a40;
   .attached {
-    margin-top: 14px;
+    margin-top: 10px;
   }
 `;
 
 const PreviewImage = styled.div`
-  padding-top: 28px;
-  font-size: 14px;
+  /*padding-top: 28px;*/
+  color: #868e96;
+  background-color: transparent;
+  font-size: 16px;
+  font-weight: bold;
   img {
     display: block;
+  }
+  .text {
+    margin-bottom: 10px;
   }
 `;
 
 const Description = styled.div`
   margin-bottom: 20px;
+  padding-bottom: 24px;
+  height: 220px;
+  border-bottom: 1px solid #e9ecef;
+  .detailInfo {
+    color: #868e96;
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .description {
+    font-size: 16px;
+    margin-top: 16px;
+  }
+`;
+
+const Attachment = styled.div`
+  margin-top: 10px;
+  color: black;
+  font-size: 14px;
+  font-weight: normal;
 `;
 
 function ViewDetail() {
@@ -86,15 +112,35 @@ function ViewDetail() {
       </TodoDetailTitle>
       <></>
       <TodoDetailContent>
-        <Description>{todo.description}</Description>
-        {todo.file && (
+        <Description>
+          <div className="detailInfo">상세 정보</div>
+          <div className="description">{todo.description}</div>
+        </Description>
+        {todo.file && todo.file.type.substring(0, 5) === "image" ? (
           <PreviewImage>
-            첨부 이미지
+            <div className="text">첨부 이미지</div>
             <img
-              alt="sample"
+              alt={todo.file.name}
               src={URL.createObjectURL(todo.file)}
-              style={{ margin: "auto", maxWidth: "200px", maxHeight: "200px" }}
+              style={{ margin: "auto", maxWidth: "450px", maxHeight: "200px" }}
             />
+          </PreviewImage>
+        ) : todo.file ? (
+          <PreviewImage>
+            <div className="text">첨부 파일</div>
+            <Attachment>
+              <MdFilePresent />
+              {todo.file.name}
+            </Attachment>
+          </PreviewImage>
+        ) : (
+          <PreviewImage>
+            <div className="text">첨부 파일</div>
+            <Attachment
+              style={{ color: "black", fontSize: "14px", fontWeight: "normal" }}
+            >
+              첨부한 파일이 없습니다
+            </Attachment>
           </PreviewImage>
         )}
         {todo.file && (
