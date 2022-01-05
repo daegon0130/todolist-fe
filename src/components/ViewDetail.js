@@ -105,7 +105,7 @@ function ViewDetail() {
   useEffect(async () => {
     await axios({
       method: "get",
-      url: "/api/todo/" + todoId,
+      url: "http://49.50.164.194:8080/api/todo/" + todoId,
     }).then((response) => {
       setTodo(response.data);
       setLoading(false);
