@@ -150,7 +150,7 @@ function TodoCreate() {
               />
               <Upload>
                 <MdFileUpload />
-                <input type="file" accept="image/*" onChange={onLoadFile} />
+                <input type="file" onChange={onLoadFile} />
               </Upload>
 
               <SubmitButton type="submit">추가</SubmitButton>
