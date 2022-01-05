@@ -16,7 +16,9 @@ const TodoListBlock = styled.div`
 function TodoList() {
   const todos = useTodoState();
   const [isLoading, setLoading] = useState(true);
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState([
+    { id: 1, title: "제발돼라", createdAt: 0, modifiedAt: 0 },
+  ]);
   useEffect(() => {
     axios({
       method: "get",
