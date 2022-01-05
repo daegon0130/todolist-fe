@@ -34,14 +34,18 @@ function TodoList() {
 
   return (
     <TodoListBlock>
-      {todoList.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          id={todo.id}
-          text={todo.title}
-          done={todo.isDone}
-        />
-      ))}
+      {todoList ? (
+        todoList.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            id={todo.id}
+            text={todo.title}
+            done={todo.isDone}
+          />
+        ))
+      ) : (
+        <div></div>
+      )}
     </TodoListBlock>
   );
 }
