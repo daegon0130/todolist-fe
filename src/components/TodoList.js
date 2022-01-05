@@ -34,7 +34,7 @@ function TodoList() {
 
   return (
     <TodoListBlock>
-      {todoList ? (
+      {todoList.length !== 0 ? (
         todoList.map((todo) => (
           <TodoItem
             key={todo.id}
