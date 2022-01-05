@@ -111,7 +111,7 @@ function ViewDetail() {
       setLoading(false);
       console.log(todo);
     });
-    setFile("http://slb-9628190.ncloudslb.com/api/files/" + todo.storeFileName);
+    setFile("http://49.50.164.194:8080/api/files/" + todo.storeFileName);
     /*
     await axios({
       method: "get",
