@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
 import { MdFileDownload, MdFilePresent } from "react-icons/md";
 import { useParams } from "react-router-dom";
+import GetTodo from "../apis/GetTodo";
+import { saveAs } from "file-saver";
+import axios from "axios";
 
 import { useTodoState } from "../TodoContext";
 
@@ -92,9 +96,43 @@ const Attachment = styled.div`
 function ViewDetail() {
   const todos = useTodoState();
   const { todoId } = useParams();
-  const todo = todos.find((todo) => todo.id == todoId);
-  console.log(todos);
-  console.log(todo);
+  //const todo = todos.find((todo) => todo.id == todoId);
+
+  const [isLoading, setLoading] = useState(true);
+  const [todo, setTodo] = useState([]);
+  const [file, setFile] = useState("");
+  let aa;
+  useEffect(async () => {
+    await axios({
+      method: "get",
+      url: "/api/todo/" + todoId,
+    }).then((response) => {
+      setTodo(response.data);
+      setLoading(false);
+      console.log(todo);
+    });
+    setFile("http://49.50.164.194:8080/api/files/" + todo.storeFileName);
+    /*
+    await axios({
+      method: "get",
+      url: "/api/files/" + todo.storeFileName,
+    }).then((response) => {
+      console.log(response.headers);
+      setFile(response.data);
+
+      console.log(response);
+      let blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      let url = URL.createObjectURL(blob);
+
+      console.log(blob);
+      console.log(url);
+      setFile(url);
+      aa = url;
+    });*/
+  }, [isLoading]);
+
   const today = new Date();
   const dateString = today.toLocaleDateString("ko-KR", {
     year: "numeric",
@@ -108,7 +146,7 @@ function ViewDetail() {
       <TodoDetailTitle>
         <h1>{dateString}</h1>
         <div className="day">{dayName}</div>
-        <div className="tasks-name">{todo.text}</div>
+        <div className="tasks-name">{todo.title}</div>
       </TodoDetailTitle>
       <></>
       <TodoDetailContent>
@@ -116,21 +154,25 @@ function ViewDetail() {
           <div className="detailInfo">상세 정보</div>
           <div className="description">{todo.description}</div>
         </Description>
-        {todo.file && todo.file.type.substring(0, 5) === "image" ? (
+        {todo.uploadFileName &&
+        todo.uploadFileName.substring(
+          todo.uploadFileName.length - 4,
+          todo.uploadFileName.length
+        ) === "jpeg" ? (
           <PreviewImage>
             <div className="text">첨부 이미지</div>
             <img
-              alt={todo.file.name}
-              src={URL.createObjectURL(todo.file)}
+              alt={todo.uploadFileName}
+              src={todo.uploadFileName}
               style={{ margin: "auto", maxWidth: "450px", maxHeight: "200px" }}
             />
           </PreviewImage>
-        ) : todo.file ? (
+        ) : todo.uploadFileName ? (
           <PreviewImage>
             <div className="text">첨부 파일</div>
             <Attachment>
               <MdFilePresent />
-              {todo.file.name}
+              {todo.uploadFileName}
             </Attachment>
           </PreviewImage>
         ) : (
@@ -143,12 +185,9 @@ function ViewDetail() {
             </Attachment>
           </PreviewImage>
         )}
-        {todo.file && (
+        {todo.uploadFileName && (
           <div className="attached">
-            <Download
-              href={URL.createObjectURL(todo.file)}
-              download={todo.file.name}
-            >
+            <Download href={file} download={todo.uploadFileName}>
               <MdFileDownload />
               파일 다운로드
             </Download>

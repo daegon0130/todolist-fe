@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import axios from "axios";
 import { MdAdd, MdFileUpload } from "react-icons/md";
+import axios from "axios";
 import { useTodoDispatch, useTodoNextId } from "../TodoContext";
-import PostTodo from "../apis/PostTodo";
+import { useParams } from "react-router-dom";
 
 const Upload = styled.div`
   display: inline-block;
@@ -93,16 +93,16 @@ const Input = styled.input`
   margin-bottom: 12px;
 `;
 
-function TodoCreate() {
+function TodoModify() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState("");
-  const [isLoading, setLoading] = useState(true);
-  const [todoList, setTodoList] = useState([]);
+  const { todoId } = useParams();
 
   const dispatch = useTodoDispatch();
   const nextId = useTodoNextId();
+
   const onToggle = () => setOpen(!open);
   const onInputChange = (e) => setInput(e.target.value);
   const onDescriptionChange = (e) => setDescription(e.target.value);
@@ -110,11 +110,6 @@ function TodoCreate() {
     console.log(e.target.files);
     setFile(e.target.files[0]);
   };
-  let bodyFormDat = new FormData();
-  bodyFormDat.append("title", input);
-  bodyFormDat.append("description", description);
-  bodyFormDat.append("file", file);
-
   const onSubmit = async (e) => {
     e.preventDefault(); // 새로고침 방지
     if (!input) {
@@ -122,14 +117,26 @@ function TodoCreate() {
       return;
     }
     console.log(file);
-
+    /*
+    dispatch({
+      type: "MODIFY",
+      todo: {
+        id: todoId,
+        text: input,
+        description: description,
+        file: file,
+        done: false,
+      },
+    });
+*/
     let bodyFormData = new FormData();
     bodyFormData.append("title", input);
     bodyFormData.append("description", description);
     bodyFormData.append("file", file);
+    bodyFormData.append("isDone", false);
     const response = await axios({
-      method: "post",
-      url: "http://49.50.164.194:8080/api/todo",
+      method: "put",
+      url: "http://49.50.164.194:8080/api/todo/" + todoId,
       headers: {
         "Content-type": "multipart/form-data",
       },
@@ -137,22 +144,10 @@ function TodoCreate() {
     });
     console.log(response.data);
     window.location.replace("/");
-
-    dispatch({
-      type: "CREATE",
-      todo: {
-        id: nextId.current,
-        text: input,
-        description: description,
-        file: file,
-        done: false,
-      },
-    });
     setInput("");
     setDescription("");
     setFile("");
     setOpen(false);
-    nextId.current += 1;
   };
 
   return (
@@ -160,6 +155,7 @@ function TodoCreate() {
       {open && (
         <>
           <InsertFormPositioner>
+            편집
             <InsertForm onSubmit={onSubmit}>
               <Input
                 autoFocus
@@ -177,7 +173,7 @@ function TodoCreate() {
                 <input type="file" onChange={onLoadFile} />
               </Upload>
 
-              <SubmitButton type="submit">추가</SubmitButton>
+              <SubmitButton type="submit">편집</SubmitButton>
             </InsertForm>
           </InsertFormPositioner>
         </>
@@ -189,4 +185,4 @@ function TodoCreate() {
   );
 }
 
-export default React.memo(TodoCreate);
+export default React.memo(TodoModify);

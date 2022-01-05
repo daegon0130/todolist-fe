@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useTodoState } from "../TodoContext";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const TodoHeadBlock = styled.div`
   padding-top: 48px;
@@ -29,6 +31,17 @@ const TodoHeadBlock = styled.div`
 function TodoHead() {
   const todos = useTodoState();
   const undoneTasks = todos.filter((todo) => !todo.done);
+  const [isLoading, setLoading] = useState(true);
+  const [todoNum, setTodoNum] = useState([]);
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: "/api/todo",
+    }).then((response) => {
+      setTodoNum(response.data.length);
+      setLoading(false);
+    });
+  }, [isLoading]);
 
   const today = new Date();
   const dateString = today.toLocaleDateString("ko-KR", {
@@ -42,7 +55,7 @@ function TodoHead() {
     <TodoHeadBlock>
       <h1>{dateString}</h1>
       <div className="day">{dayName}</div>
-      <div className="tasks-left">할 일 {undoneTasks.length}개 남음</div>
+      <div className="tasks-left">할 일 {todoNum}개 남음</div>
     </TodoHeadBlock>
   );
 }

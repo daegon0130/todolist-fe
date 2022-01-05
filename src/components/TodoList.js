@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
 import TodoItem from "./TodoItem";
 import { useTodoState } from "../TodoContext";
+import GetTodoList from "../apis/GetTodoList";
+import axios from "axios";
 
 const TodoListBlock = styled.div`
   flex: 1;
@@ -12,16 +15,31 @@ const TodoListBlock = styled.div`
 
 function TodoList() {
   const todos = useTodoState();
-  console.log(todos);
+  const [isLoading, setLoading] = useState(true);
+  const [todoList, setTodoList] = useState([]);
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: "/api/todo",
+    }).then((response) => {
+      setTodoList(response.data);
+      setLoading(false);
+      console.log(todoList);
+    });
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <TodoListBlock></TodoListBlock>;
+  }
 
   return (
     <TodoListBlock>
-      {todos.map((todo) => (
+      {todoList.map((todo) => (
         <TodoItem
           key={todo.id}
           id={todo.id}
-          text={todo.text}
-          done={todo.done}
+          text={todo.title}
+          done={todo.isDone}
         />
       ))}
     </TodoListBlock>

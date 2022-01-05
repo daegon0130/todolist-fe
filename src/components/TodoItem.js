@@ -1,8 +1,10 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import axios from "axios";
 import { MdDone, MdDelete } from "react-icons/md";
 import { useTodoDispatch } from "../TodoContext";
 import { Link } from "react-router-dom";
+import DeleteTodo from "../apis/DeleteTodo";
 
 const Remove = styled.div`
   display: flex;
@@ -65,8 +67,23 @@ const Text = styled.div`
 
 function TodoItem({ id, done, text }) {
   const dispatch = useTodoDispatch();
-  const onToggle = () => dispatch({ type: "TOGGLE", id });
-  const onRemove = () => dispatch({ type: "REMOVE", id });
+  const onToggle = async () => {
+    dispatch({ type: "TOGGLE", id });
+    await axios({
+      method: "delete",
+      url: "/api/todo/" + id,
+    });
+  };
+  const onRemove = async () => {
+    dispatch({ type: "REMOVE", id });
+
+    await axios({
+      method: "delete",
+      url: "/api/todo/" + id,
+    });
+    window.location.replace("/");
+  };
+
   return (
     <TodoItemBlock>
       <CheckCircle done={done} onClick={onToggle}>

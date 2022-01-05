@@ -1,4 +1,5 @@
 import React, { useReducer, createContext, useContext, useRef } from "react";
+import GetTodoList from "./apis/GetTodoList";
 
 const initialTodos = [
   {
@@ -39,6 +40,14 @@ function todoReducer(state, action) {
       return state.map((todo) =>
         todo.id === action.id ? { ...todo, done: !todo.done } : todo
       );
+    case "MODIFY":
+      return state.map((todo) => {
+        if (todo.id === action.id) {
+          todo = action.todo;
+        }
+      });
+    case "PUT":
+      return action.todo;
     case "REMOVE":
       return state.filter((todo) => todo.id !== action.id);
     default:
@@ -52,7 +61,8 @@ const TodoNextIdContext = createContext();
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(todoReducer, initialTodos);
-  const nextId = useRef(5);
+  console.log(state);
+  const nextId = useRef(2);
 
   return (
     <TodoStateContext.Provider value={state}>
