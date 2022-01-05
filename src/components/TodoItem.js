@@ -71,7 +71,7 @@ function TodoItem({ id, done, text }) {
     dispatch({ type: "TOGGLE", id });
     await axios({
       method: "delete",
-      url: "http://49.50.164.194:8080/api/todo/" + id,
+      url: "http://slb-9628190.ncloudslb.com/api/todo/" + id,
     });
   };
   const onRemove = async () => {
@@ -79,7 +79,7 @@ function TodoItem({ id, done, text }) {
 
     await axios({
       method: "delete",
-      url: "http://49.50.164.194:8080/api/todo/" + id,
+      url: "http://slb-9628190.ncloudslb.com/api/todo/" + id,
     });
     window.location.replace("/");
   };

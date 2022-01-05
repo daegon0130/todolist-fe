@@ -129,7 +129,7 @@ function TodoCreate() {
     bodyFormData.append("file", file);
     const response = await axios({
       method: "post",
-      url: "http://49.50.164.194:8080/api/todo",
+      url: "http://slb-9628190.ncloudslb.com/api/todo",
       headers: {
         "Content-type": "multipart/form-data",
       },

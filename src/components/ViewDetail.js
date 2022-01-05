@@ -105,13 +105,13 @@ function ViewDetail() {
   useEffect(async () => {
     await axios({
       method: "get",
-      url: "http://49.50.164.194:8080/api/todo/" + todoId,
+      url: "http://slb-9628190.ncloudslb.com/api/todo/" + todoId,
     }).then((response) => {
       setTodo(response.data);
       setLoading(false);
       console.log(todo);
     });
-    setFile("http://49.50.164.194:8080/api/files/" + todo.storeFileName);
+    setFile("http://slb-9628190.ncloudslb.com/api/files/" + todo.storeFileName);
     /*
     await axios({
       method: "get",

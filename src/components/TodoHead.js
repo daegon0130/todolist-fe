@@ -36,7 +36,7 @@ function TodoHead() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://49.50.164.194:8080/api/todo",
+      url: "http://slb-9628190.ncloudslb.com/api/todo",
     }).then((response) => {
       setTodoNum(response.data.length);
       setLoading(false);
