@@ -145,7 +145,10 @@ function ViewDetail() {
         )}
         {todo.file && (
           <div className="attached">
-            <Download href={URL.createObjectURL(todo.file)} download>
+            <Download
+              href={URL.createObjectURL(todo.file)}
+              download={todo.file.name}
+            >
               <MdFileDownload />
               파일 다운로드
             </Download>
