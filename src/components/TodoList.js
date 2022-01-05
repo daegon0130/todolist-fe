@@ -22,7 +22,7 @@ function TodoList() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "/api/todo",
+      url: "http://49.50.164.194:8080/api/todo",
     }).then((response) => {
       setTodoList(response.data);
       setLoading(false);
